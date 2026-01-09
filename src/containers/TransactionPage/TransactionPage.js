@@ -658,6 +658,16 @@ export const TransactionPageComponent = props => {
       ? window.matchMedia(`(max-width: ${MAX_MOBILE_SCREEN_WIDTH}px)`)?.matches
       : true;
 
+  const { transactionFields } = foundListingTypeConfig || {};
+
+  const customTransactionFieldProps = role => ({
+    protectedData: transaction.attributes.protectedData,
+    transactionFieldConfigs: transactionFields,
+    intl,
+    className: css.customFieldsContainer,
+    role,
+  });
+
   const actionButtonContainer = isMobile ? 'mobile' : 'desktop';
   // TransactionPanel is presentational component
   // that currently handles showing everything inside layout's main view area.
@@ -721,6 +731,7 @@ export const TransactionPageComponent = props => {
           isCustomerBanned={isCustomerBanned}
           transactionRole={transactionRole}
           intl={intl}
+          customTransactionFieldProps={customTransactionFieldProps('customer')}
         />
       }
       offer={
@@ -731,9 +742,11 @@ export const TransactionPageComponent = props => {
           isRegularNegotiation={isRegularNegotiation}
           isProviderBanned={isProviderBanned}
           intl={intl}
+          customTransactionFieldProps={customTransactionFieldProps('provider')}
         />
       }
       isInquiryProcess={processName === INQUIRY_PROCESS_NAME}
+      transactionFields={transactionFields}
       config={config}
       {...orderBreakdownMaybe}
       orderPanel={
