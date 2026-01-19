@@ -14,6 +14,9 @@ way to update this template, but currently, we follow a pattern:
 
 ## Upcoming version 2026-XX-XX
 
+- [add] Add support for provider-driven negotiation loop ("Update offer" loop). With this loop, the
+  provider can update the offer they made on default-negotiation process.
+  [#735](https://github.com/sharetribe/web-template/pull/735)
 - [fix] MakeOfferPage.duck.js and RequestQuotePage.duck.js: fix a bug with listingId fetching.
   [#743](https://github.com/sharetribe/web-template/pull/743)
 - [add] Add currently available translations for DE, ES, FR.
