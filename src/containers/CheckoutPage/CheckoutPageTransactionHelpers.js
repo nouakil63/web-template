@@ -181,7 +181,6 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     hasPaymentIntentUserActionsDone,
     isPaymentFlowUseSavedCard,
     isPaymentFlowPayAndSaveCard,
-    message,
     onConfirmCardPayment,
     onConfirmPayment,
     onInitiateOrder,
@@ -303,19 +302,12 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     return orderPromise;
   };
 
-  //////////////////////////////////
-  // Step 4: send initial message //
-  //////////////////////////////////
-  const fnSendMessage = fnParams => {
-    const orderId = fnParams?.id;
-    return onSendMessage({ id: orderId, message });
-  };
-
   //////////////////////////////////////////////////////////
-  // Step 5: optionally save card as defaultPaymentMethod //
+  // Step 4: optionally save card as defaultPaymentMethod //
   //////////////////////////////////////////////////////////
   const fnSavePaymentMethod = fnParams => {
     const pi = createdPaymentIntent || paymentIntent;
+    const orderId = fnParams?.id;
 
     if (isPaymentFlowPayAndSaveCard) {
       return onSavePaymentMethod(ensuredStripeCustomer, pi.payment_method)
@@ -330,7 +322,7 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
           return { ...fnParams, paymentMethodSaved: false };
         });
     } else {
-      return Promise.resolve({ ...fnParams, paymentMethodSaved: true });
+      return Promise.resolve({ orderId, paymentMethodSaved: true });
     }
   };
 
@@ -345,7 +337,6 @@ export const processCheckoutWithPayment = (orderParams, extraPaymentParams) => {
     fnRequestPayment,
     fnConfirmCardPayment,
     fnConfirmPayment,
-    fnSendMessage,
     fnSavePaymentMethod
   );
 

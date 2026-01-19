@@ -109,7 +109,8 @@ const getOrderParams = (
   shippingDetails,
   optionalPaymentParams,
   config,
-  transactionFieldProtectedData
+  transactionFieldProtectedData,
+  customerDefaultMessage
 ) => {
   const quantity = pageData.orderData?.quantity;
   const quantityMaybe = quantity ? { quantity } : {};
@@ -125,6 +126,8 @@ const getOrderParams = (
   const priceVariant = priceVariants?.find(pv => pv.name === priceVariantName);
   const priceVariantMaybe = priceVariant ? prefixPriceVariantProperties(priceVariant) : {};
 
+  const customerDefaultMessageMaybe = customerDefaultMessage ? { customerDefaultMessage } : {};
+
   const protectedDataMaybe = {
     protectedData: {
       ...getTransactionTypeData(listingType, unitType, config),
@@ -132,6 +135,7 @@ const getOrderParams = (
       ...shippingDetails,
       ...priceVariantMaybe,
       ...transactionFieldProtectedData,
+      ...customerDefaultMessageMaybe,
     },
   };
 
@@ -260,7 +264,7 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     pageData,
     setPageData,
     sessionStorageKey,
-    transactionFields,
+    transactionFields = [],
   } = props;
   const { card, message, paymentMethod: selectedPaymentMethod, formValues } = values;
   const { saveAfterOnetimePayment: saveAfterOnetimePaymentRaw } = formValues;
@@ -288,7 +292,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     stripe,
     card,
     billingDetails: getBillingDetails(formValues, currentUser),
-    message,
     paymentIntent,
     hasPaymentIntentUserActionsDone,
     stripePaymentMethodId,
@@ -296,7 +299,6 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     onInitiateOrder,
     onConfirmCardPayment,
     onConfirmPayment,
-    onSendMessage,
     onSavePaymentMethod,
     sessionStorageKey,
     stripeCustomer: currentUser?.stripeCustomer,
@@ -323,21 +325,20 @@ const handleSubmit = (values, process, props, stripe, submitting, setSubmitting)
     shippingDetails,
     optionalPaymentParams,
     config,
-    transactionFieldsProtectedData
+    transactionFieldsProtectedData,
+    message
   );
 
   // There are multiple XHR calls that needs to be made against Stripe API and Sharetribe Marketplace API on checkout with payments
   processCheckoutWithPayment(orderParams, requestPaymentParams)
     .then(response => {
-      const { orderId, messageSuccess, paymentMethodSaved } = response;
+      const { orderId, paymentMethodSaved } = response;
       setSubmitting(false);
 
-      const initialMessageFailedToTransaction = messageSuccess ? null : orderId;
       const orderDetailsPath = pathByRouteName('OrderDetailsPage', routeConfiguration, {
         id: orderId.uuid,
       });
       const initialValues = {
-        initialMessageFailedToTransaction,
         savePaymentMethodFailed: !paymentMethodSaved,
       };
 

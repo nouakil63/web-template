@@ -277,7 +277,6 @@ export const TransactionPageComponent = props => {
   const intl = useIntl();
   const {
     currentUser,
-    initialMessageFailedToTransaction,
     savePaymentMethodFailed = false,
     fetchMessagesError,
     fetchMessagesInProgress,
@@ -559,10 +558,10 @@ export const TransactionPageComponent = props => {
     </div>
   );
 
-  const initialMessageFailed = !!(
-    initialMessageFailedToTransaction &&
-    initialMessageFailedToTransaction.uuid === transaction?.id?.uuid
-  );
+  // const initialMessageFailed = !!(
+  //   initialMessageFailedToTransaction &&
+  //   initialMessageFailedToTransaction.uuid === transaction?.id?.uuid
+  // );
 
   const otherUserDisplayName = isOwnOrder ? (
     <UserDisplayName user={provider} intl={intl} />
@@ -671,9 +670,9 @@ export const TransactionPageComponent = props => {
       customer={customer}
       provider={provider}
       transitions={txTransitions}
+      processName={processName}
       protectedData={transaction?.attributes?.protectedData}
       messages={messages}
-      initialMessageFailed={initialMessageFailed}
       savePaymentMethodFailed={savePaymentMethodFailed}
       fetchMessagesError={fetchMessagesError}
       sendMessageInProgress={sendMessageInProgress}
