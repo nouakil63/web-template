@@ -11,9 +11,9 @@ import CustomExtendedDataSection from '../../../components/CustomExtendedDataSec
 
 /**
  * Renders custom transaction fields.
- * - SectionDetailsMaybe is used if schemaType is 'enum', 'long', or 'boolean'
- * - SectionMultiEnumMaybe is used if schemaType is 'multi-enum'
- * - SectionTextMaybe is used if schemaType is 'text'
+ * - SectionDetails is used if schemaType is 'enum', 'long', or 'boolean'
+ * - SectionMultiEnum is used if schemaType is 'multi-enum'
+ * - SectionText is used if schemaType is 'text'
  *
  * @param {*} props include protectedData, transactionFieldConfigs
  * @returns React.Fragment containing aforementioned components

@@ -6,7 +6,7 @@ import css from './CustomExtendedDataSection.module.css';
 
 const MIN_LENGTH_FOR_LONG_WORDS = 20;
 
-const SectionTextMaybe = props => {
+const SectionText = props => {
   const { text, heading, showAsIngress = false } = props;
   const textClass = showAsIngress ? css.ingress : css.text;
   const content = richText(text, {
@@ -28,4 +28,4 @@ const SectionTextMaybe = props => {
   ) : null;
 };
 
-export default SectionTextMaybe;
+export default SectionText;

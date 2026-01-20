@@ -2,17 +2,17 @@ import React from 'react';
 
 import { SCHEMA_TYPE_MULTI_ENUM, SCHEMA_TYPE_TEXT, SCHEMA_TYPE_YOUTUBE } from '../../util/types';
 
-import SectionDetailsMaybe from './SectionDetailsMaybe';
-import SectionTextMaybe from './SectionTextMaybe';
-import SectionMultiEnumMaybe from './SectionMultiEnumMaybe';
-import SectionYoutubeVideoMaybe from './SectionYoutubeVideoMaybe';
+import SectionDetails from './SectionDetails';
+import SectionText from './SectionText';
+import SectionMultiEnum from './SectionMultiEnum';
+import SectionYoutubeVideo from './SectionYoutubeVideo';
 
 const CustomExtendedDataSection = props => {
   const { sectionDetailsProps, propsForCustomFields = [], page, pickExtendedDataFields } = props;
 
   return (
     <>
-      <SectionDetailsMaybe
+      <SectionDetails
         {...sectionDetailsProps}
         page={page}
         pickExtendedDataFields={pickExtendedDataFields}
@@ -20,11 +20,11 @@ const CustomExtendedDataSection = props => {
       {propsForCustomFields.map(customFieldProps => {
         const { schemaType, key, ...fieldProps } = customFieldProps;
         return schemaType === SCHEMA_TYPE_MULTI_ENUM ? (
-          <SectionMultiEnumMaybe key={key} page={page} {...fieldProps} />
+          <SectionMultiEnum key={key} page={page} {...fieldProps} />
         ) : schemaType === SCHEMA_TYPE_TEXT ? (
-          <SectionTextMaybe key={key} {...fieldProps} />
+          <SectionText key={key} {...fieldProps} />
         ) : schemaType === SCHEMA_TYPE_YOUTUBE ? (
-          <SectionYoutubeVideoMaybe key={key} {...fieldProps} />
+          <SectionYoutubeVideo key={key} {...fieldProps} />
         ) : null;
       })}
     </>
