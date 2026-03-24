@@ -33,8 +33,21 @@ const UserNav = props => {
       ]
     : [];
 
+  const syncTabMaybe = showManageListingsLink
+    ? [
+        {
+          text: <FormattedMessage id="UserNav.syncDashboard" />,
+          selected: currentPage === 'SyncDashboardPage',
+          linkProps: {
+            name: 'SyncDashboardPage',
+          },
+        },
+      ]
+    : [];
+
   const tabs = [
     ...manageListingsTabMaybe,
+    ...syncTabMaybe,
     {
       text: <FormattedMessage id="UserNav.profileSettings" />,
       selected: currentPage === 'ProfileSettingsPage',

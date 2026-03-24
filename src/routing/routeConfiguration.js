@@ -40,6 +40,8 @@ const TermsOfServicePage = loadable(() => import(/* webpackChunkName: "TermsOfSe
 const TransactionPage = loadable(() => import(/* webpackChunkName: "TransactionPage" */ '../containers/TransactionPage/TransactionPage'));
 const NoAccessPage = loadable(() => import(/* webpackChunkName: "NoAccessPage" */ '../containers/NoAccessPage/NoAccessPage'));
 
+const SyncDashboardPage = loadable(() => import(/* webpackChunkName: "SyncDashboardPage" */ '../containers/SyncDashboardPage/SyncDashboardPage'));
+
 // Styleguide helps you to review current components and develop new ones
 const StyleguidePage = loadable(() => import(/* webpackChunkName: "StyleguidePage" */ '../containers/StyleguidePage/StyleguidePage'));
 
@@ -300,6 +302,13 @@ const routeConfiguration = (layoutConfig, accessControlConfig) => {
       authPage: 'LoginPage',
       component: ManageListingsPage,
       loadData: pageDataLoadingAPI.ManageListingsPage.loadData,
+    },
+    {
+      path: '/sync',
+      name: 'SyncDashboardPage',
+      auth: true,
+      authPage: 'LoginPage',
+      component: SyncDashboardPage,
     },
     {
       path: '/account',

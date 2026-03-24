@@ -1,0 +1,651 @@
+@import '../../styles/customMediaQueries.css';
+
+/* ============ Hero Section ============ */
+.hero {
+  background: linear-gradient(135deg, #6938ef 0%, #8d68f3 100%);
+  padding: 32px 24px 28px;
+  color: var(--colorWhite);
+
+  @media (--viewportMedium) {
+    padding: 40px 24px 32px;
+  }
+  @media (--viewportLarge) {
+    padding: 48px 36px 36px;
+  }
+}
+
+.heroTitle {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  letter-spacing: -0.3px;
+
+  @media (--viewportMedium) {
+    font-size: 28px;
+  }
+}
+
+.heroSubtitle {
+  font-size: 14px;
+  opacity: 0.85;
+  margin: 0;
+  max-width: 560px;
+  line-height: 1.5;
+
+  @media (--viewportMedium) {
+    font-size: 16px;
+  }
+}
+
+/* ============ Stats Bar ============ */
+.statsBar {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 0 24px;
+  margin-top: -20px;
+  margin-bottom: 28px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-top: -24px;
+    margin-bottom: 36px;
+  }
+  @media (--viewportLarge) {
+    padding: 0 36px;
+    gap: 20px;
+  }
+}
+
+.statCard {
+  background: var(--colorWhite);
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--colorGrey100);
+}
+
+.statValue {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--colorGrey900);
+  line-height: 1.2;
+
+  @media (--viewportMedium) {
+    font-size: 26px;
+  }
+}
+
+.statLabel {
+  font-size: 12px;
+  color: var(--colorGrey500);
+  margin-top: 2px;
+
+  @media (--viewportMedium) {
+    font-size: 13px;
+  }
+}
+
+/* ============ Main Content ============ */
+.main {
+  padding: 0 24px 60px;
+
+  @media (--viewportLarge) {
+    padding: 0 36px 60px;
+    max-width: calc(var(--contentMaxWidth) + 72px);
+    margin: 0 auto;
+  }
+  @media (--viewportXLarge) {
+    max-width: var(--contentMaxWidth);
+  }
+}
+
+.sectionTitle {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 0 0 4px;
+  color: var(--colorGrey900);
+
+  @media (--viewportMedium) {
+    font-size: 20px;
+  }
+}
+
+.sectionSubtitle {
+  font-size: 13px;
+  color: var(--colorGrey500);
+  margin: 0 0 20px;
+
+  @media (--viewportMedium) {
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+}
+
+/* ============ Integration Cards Grid ============ */
+.integrationsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-bottom: 40px;
+
+  @media (--viewportMedium) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (--viewportLarge) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ============ Integration Card ============ */
+.integrationCard {
+  background: var(--colorWhite);
+  border-radius: 14px;
+  padding: 24px;
+  border: 2px solid var(--colorGrey100);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.integrationCard:hover {
+  border-color: var(--marketplaceColor);
+  box-shadow: 0 4px 20px rgba(105, 56, 239, 0.12);
+  transform: translateY(-2px);
+}
+
+.cardFeatured {
+  composes: integrationCard;
+  border-color: var(--marketplaceColor);
+  background: linear-gradient(180deg, hsl(256 85% 98%) 0%, var(--colorWhite) 100%);
+}
+
+.recommendedBadge {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--marketplaceColor);
+  color: var(--colorWhite);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+}
+
+/* ============ Card Icon ============ */
+.cardIcon {
+  width: 50px;
+  height: 50px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  margin-bottom: 14px;
+}
+
+.iconApi { background: hsl(256 45% 95%); }
+.iconExcel { background: hsl(142 45% 93%); }
+.iconPms { background: hsl(45 90% 92%); }
+.iconZapier { background: hsl(0 60% 94%); }
+.iconUbiflow { background: hsl(214 60% 93%); }
+.iconXml { background: hsl(270 50% 95%); }
+
+/* ============ Card Content ============ */
+.cardTitle {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 0 0 5px;
+  color: var(--colorGrey900);
+}
+
+.cardDesc {
+  font-size: 13px;
+  color: var(--colorGrey500);
+  line-height: 1.5;
+  margin: 0 0 14px;
+}
+
+/* ============ Difficulty ============ */
+.difficulty {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--colorGrey500);
+  margin-bottom: 14px;
+}
+
+.difficultyDots {
+  display: flex;
+  gap: 3px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--colorGrey200);
+}
+
+.dotFilled { background: var(--marketplaceColor); }
+.dotGreen { background: var(--colorSuccessLight); }
+.dotOrange { background: var(--colorAttention); }
+
+/* ============ Tags ============ */
+.cardTags {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.tag {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 5px;
+  background: var(--colorGrey50);
+  color: var(--colorGrey700);
+}
+
+.tagSync { background: hsl(142 45% 93%); color: #166534; }
+.tagAuto { background: hsl(214 60% 93%); color: #1e40af; }
+.tagEasy { background: hsl(45 90% 92%); color: #92400e; }
+
+/* ============ Status Badge ============ */
+.statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+
+.statusActive { background: hsl(142 45% 93%); color: #166534; }
+.statusReady { background: hsl(214 60% 93%); color: #1e40af; }
+.statusComing { background: hsl(45 90% 92%); color: #92400e; }
+
+.statusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.statusActive .statusDot { background: #22c55e; }
+.statusReady .statusDot { background: #3b82f6; }
+.statusComing .statusDot { background: #f59e0b; }
+
+/* ============ Card Buttons ============ */
+.cardFooter {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.btnPrimary {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  background: var(--marketplaceColor);
+  color: var(--colorWhite);
+  transition: background 0.2s;
+}
+
+.btnPrimary:hover {
+  background: var(--marketplaceColorLight);
+}
+
+.btnSecondary {
+  composes: btnPrimary;
+  background: var(--colorGrey50);
+  color: var(--colorGrey700);
+}
+
+.btnSecondary:hover {
+  background: var(--colorGrey100);
+}
+
+.btnDisabled {
+  composes: btnPrimary;
+  background: var(--colorGrey50);
+  color: var(--colorGrey400);
+  cursor: not-allowed;
+}
+
+.btnDisabled:hover {
+  background: var(--colorGrey50);
+}
+
+/* ============ Sync Table ============ */
+.syncTable {
+  background: var(--colorWhite);
+  border-radius: 14px;
+  border: 1px solid var(--colorGrey100);
+  overflow: hidden;
+}
+
+.syncTableHeader {
+  display: none;
+
+  @media (--viewportMedium) {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    padding: 12px 20px;
+    background: var(--colorGrey50);
+    border-bottom: 1px solid var(--colorGrey100);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--colorGrey500);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
+
+.syncTableRow {
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--colorGrey50);
+  font-size: 14px;
+
+  @media (--viewportMedium) {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+    align-items: center;
+  }
+}
+
+.syncTableRow:last-child {
+  border-bottom: none;
+}
+
+.syncRowTitle {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--colorGrey900);
+
+  @media (--viewportMedium) {
+    margin-bottom: 0;
+  }
+}
+
+.syncRowMeta {
+  display: flex;
+  gap: 12px;
+  font-size: 13px;
+  color: var(--colorGrey500);
+
+  @media (--viewportMedium) {
+    display: contents;
+  }
+}
+
+.syncMethod {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 2px 8px;
+  border-radius: 5px;
+  background: var(--colorGrey50);
+}
+
+.syncStatusSuccess { color: var(--colorSuccess); font-weight: 500; }
+.syncStatusPending { color: var(--colorAttention); font-weight: 500; }
+.syncStatusError { color: var(--colorFail); font-weight: 500; }
+
+/* ============ Modal ============ */
+.modalOverlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modalOverlayActive {
+  composes: modalOverlay;
+  display: flex;
+}
+
+.modal {
+  background: var(--colorWhite);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 500px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+
+  @media (--viewportMedium) {
+    padding: 32px;
+  }
+}
+
+.modalClose {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: var(--colorGrey400);
+  padding: 4px;
+}
+
+.modalClose:hover {
+  color: var(--colorGrey700);
+}
+
+.modalTitle {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: var(--colorGrey900);
+}
+
+.modalDesc {
+  font-size: 14px;
+  color: var(--colorGrey500);
+  margin: 0 0 20px;
+  line-height: 1.6;
+}
+
+.apiKeyBox {
+  background: var(--colorGrey900);
+  color: #a5f3fc;
+  font-family: monospace;
+  font-size: 12px;
+  padding: 14px 16px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  word-break: break-all;
+  position: relative;
+  line-height: 1.5;
+}
+
+.copyBtn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: var(--colorGrey700);
+  color: var(--colorWhite);
+  border: none;
+  padding: 4px 10px;
+  border-radius: 5px;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+.copyBtn:hover {
+  background: var(--colorGrey600);
+}
+
+.modalLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--colorGrey700);
+  margin-bottom: 6px;
+}
+
+.modalLabelSpaced {
+  composes: modalLabel;
+  margin-top: 14px;
+}
+
+/* ============ Excel Modal ============ */
+.stepsRow {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.step {
+  flex: 1;
+  text-align: center;
+  padding: 14px 8px;
+  background: var(--colorGrey50);
+  border-radius: 10px;
+}
+
+.stepNumber {
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+
+.stepTitle {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--colorGrey700);
+}
+
+.stepSub {
+  font-size: 11px;
+  color: var(--colorGrey400);
+}
+
+.uploadZone {
+  border: 2px dashed var(--colorGrey200);
+  border-radius: 10px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  margin-bottom: 14px;
+}
+
+.uploadZone:hover {
+  border-color: var(--marketplaceColor);
+  background: hsl(256 85% 98%);
+}
+
+.uploadZoneIcon {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+
+.uploadZoneText {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--colorGrey700);
+}
+
+.uploadZoneSub {
+  font-size: 12px;
+  color: var(--colorGrey400);
+  margin-top: 4px;
+}
+
+.btnFull {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+
+.btnFullPrimary {
+  composes: btnFull;
+  background: var(--marketplaceColor);
+  color: var(--colorWhite);
+}
+
+.btnFullPrimary:hover {
+  background: var(--marketplaceColorLight);
+}
+
+.btnFullOutline {
+  composes: btnFull;
+  background: var(--colorWhite);
+  color: var(--marketplaceColor);
+  border: 2px solid var(--marketplaceColor);
+  margin-bottom: 14px;
+}
+
+.btnFullOutline:hover {
+  background: hsl(256 85% 98%);
+}
+
+/* ============ Coming Soon Box ============ */
+.comingSoonBox {
+  background: hsl(45 90% 92%);
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.comingSoonIcon {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.comingSoonTitle {
+  font-size: 14px;
+  font-weight: 600;
+  color: #92400e;
+}
+
+.comingSoonSub {
+  font-size: 12px;
+  color: #a16207;
+  margin-top: 4px;
+}
+
+.useCaseList {
+  font-size: 13px;
+  color: var(--colorGrey500);
+  line-height: 2;
+}
+
+.useCaseLabel {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: var(--colorGrey700);
+}

@@ -1148,6 +1148,7 @@
   "TopbarDesktop.screenreader.search": "Search",
   "TopbarDesktop.screenreader.topbarNavigation": "Top bar navigation",
   "TopbarDesktop.signup": "Sign up",
+  "TopbarDesktop.syncDashboardLink": "Sync listings",
   "TopbarDesktop.yourListingsLink": "Your listings",
   "TopbarMobileMenu.accountSettingsLink": "Account settings",
   "TopbarMobileMenu.greeting": "Hello {displayName}",
@@ -1159,6 +1160,7 @@
   "TopbarMobileMenu.signupLink": "Sign up",
   "TopbarMobileMenu.signupOrLogin": "{signup} or {login}",
   "TopbarMobileMenu.unauthorizedGreeting": "Hello there,{lineBreak}would you like to {signupOrLogin}?",
+  "TopbarMobileMenu.syncDashboardLink": "Sync listings",
   "TopbarMobileMenu.yourListingsLink": "Your listings",
   "TopbarSearchForm.placeholder": "Search listings…",
   "TopbarSimplified.goToLandingPage": "Go to the homepage",
@@ -1398,5 +1400,6 @@
   "UserNav.accountSettings": "Account settings",
   "UserNav.profileSettings": "Profile settings",
   "UserNav.screenreader.userNav": "User profile navigation",
+  "UserNav.syncDashboard": "Sync listings",
   "UserNav.yourListings": "Your listings"
 }

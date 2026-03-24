@@ -85,6 +85,17 @@ const ProfileMenu = ({ currentPage, currentUser, onLogout, showManageListingsLin
             </NamedLink>
           </MenuItem>
         ) : null}
+        {showManageListingsLink ? (
+          <MenuItem key="SyncDashboardPage">
+            <NamedLink
+              className={classNames(css.menuLink, currentPageClass('SyncDashboardPage'))}
+              name="SyncDashboardPage"
+            >
+              <span className={css.menuItemBorder} />
+              <FormattedMessage id="TopbarDesktop.syncDashboardLink" />
+            </NamedLink>
+          </MenuItem>
+        ) : null}
         <MenuItem key="ProfileSettingsPage">
           <NamedLink
             className={classNames(css.menuLink, currentPageClass('ProfileSettingsPage'))}
