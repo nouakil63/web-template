@@ -38,6 +38,10 @@ const sanitizeMultiEnum = (arr, options) =>
 const sanitizeLong = lng => (lng == null || typeof lng === 'number' ? lng : null);
 const sanitizeBoolean = bool => (bool == null || typeof bool === 'boolean' ? bool : null);
 
+// This field used to be configured as a number before becoming a text field.
+// Some hosted configs/read models can briefly disagree and would otherwise null the string value.
+const listingFieldTextCompatibilityKeys = ['floorsNumber'];
+
 const sanitizeYoutubeVideoUrl = url => {
   const sanitizedUrl = sanitizeUrl(url);
   const videoID = extractYouTubeID(sanitizedUrl);
@@ -185,15 +189,18 @@ const sanitizeConfiguredPublicData = (publicData, config = {}) => {
       'userType',
       'cardStyle',
     ];
-    const sanitizedValue = knownKeysWithString.includes(key)
-      ? sanitizeText(value)
-      : foundListingFieldConfig
-      ? sanitizedExtendedDataFields(value, foundListingFieldConfig)
-      : foundUserFieldConfig
-      ? sanitizedExtendedDataFields(value, foundUserFieldConfig)
-      : typeof value === 'string'
-      ? sanitizeText(value)
-      : value;
+    const isListingFieldTextCompatibilityKey =
+      foundListingFieldConfig && listingFieldTextCompatibilityKeys.includes(key);
+    const sanitizedValue =
+      knownKeysWithString.includes(key) || isListingFieldTextCompatibilityKey
+        ? sanitizeText(value)
+        : foundListingFieldConfig
+        ? sanitizedExtendedDataFields(value, foundListingFieldConfig)
+        : foundUserFieldConfig
+        ? sanitizedExtendedDataFields(value, foundUserFieldConfig)
+        : typeof value === 'string'
+        ? sanitizeText(value)
+        : value;
 
     return {
       ...sanitized,
