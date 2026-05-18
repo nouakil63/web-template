@@ -8,6 +8,14 @@ import {
 } from '../../../util/urlHelpers';
 import { ensureListing } from '../../../util/data';
 import { createResourceLocatorString } from '../../../util/routes';
+import {
+  displayDeliveryPickup,
+  displayDeliveryShipping,
+  displayLocation,
+  displayPrice,
+  requireListingImage,
+} from '../../../util/configHelpers';
+import { INQUIRY_PROCESS_NAME } from '../../../transactions/transaction';
 
 // Import modules from this directory
 import EditListingAvailabilityPanel from './EditListingAvailabilityPanel/EditListingAvailabilityPanel';
@@ -41,6 +49,37 @@ export const SUPPORTED_TABS = [
   PHOTOS,
   STYLE,
 ];
+
+const tabsForListingType = (processName, listingTypeConfig) => {
+  const locationMaybe = displayLocation(listingTypeConfig) ? [LOCATION] : [];
+  const pricingMaybe = displayPrice(listingTypeConfig) ? [PRICING] : [];
+  const deliveryMaybe =
+    displayDeliveryPickup(listingTypeConfig) || displayDeliveryShipping(listingTypeConfig)
+      ? [DELIVERY]
+      : [];
+  const styleOrPhotosTab = requireListingImage(listingTypeConfig) ? [PHOTOS] : [STYLE];
+
+  const tabs = {
+    ['default-booking']: [DETAILS, ...locationMaybe, PRICING, AVAILABILITY, ...styleOrPhotosTab],
+    ['default-purchase']: [DETAILS, PRICING_AND_STOCK, ...deliveryMaybe, ...styleOrPhotosTab],
+    ['default-negotiation']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
+    ['default-inquiry']: [DETAILS, ...locationMaybe, ...pricingMaybe, ...styleOrPhotosTab],
+  };
+
+  return tabs[processName] || tabs['default-inquiry'];
+};
+
+const getTabsFromSavedListing = (savedListing, config, fallbackTabs) => {
+  const publicData = savedListing?.attributes?.publicData || {};
+  const listingTypeConfig = config.listing.listingTypes.find(
+    listingType => listingType.listingType === publicData.listingType
+  );
+  const processName = publicData.transactionProcessAlias
+    ? publicData.transactionProcessAlias.split('/')[0]
+    : listingTypeConfig?.transactionType?.process || INQUIRY_PROCESS_NAME;
+
+  return listingTypeConfig ? tabsForListingType(processName, listingTypeConfig) : fallbackTabs;
+};
 
 const pathParamsToNextTab = (params, tab, marketplaceTabs) => {
   const nextTabIndex = marketplaceTabs.findIndex(s => s === tab) + 1;
@@ -124,8 +163,13 @@ const EditListingWizardTab = props => {
 
   // New listing flow has automatic redirects to new tab on the wizard
   // and the last panel calls publishListing API endpoint.
-  const automaticRedirectsForNewListingFlow = (tab, listingId) => {
-    if (tab !== marketplaceTabs[marketplaceTabs.length - 1]) {
+  const automaticRedirectsForNewListingFlow = (tab, listingId, savedListing) => {
+    const tabsForRedirect =
+      isNewURI && tab === DETAILS
+        ? getTabsFromSavedListing(savedListing, config, marketplaceTabs)
+        : marketplaceTabs;
+
+    if (tab !== tabsForRedirect[tabsForRedirect.length - 1]) {
       // Create listing flow: smooth scrolling polyfill to scroll to correct tab
       handleCreateFlowTabScrolling(false);
 
@@ -134,7 +178,7 @@ const EditListingWizardTab = props => {
         listingId,
         params,
         tab,
-        marketplaceTabs,
+        tabsForRedirect,
         history,
         routeConfiguration
       );
@@ -157,8 +201,9 @@ const EditListingWizardTab = props => {
         // In Availability tab, the submitted data (plan) is inside a modal
         // We don't redirect provider immediately after plan is set
         if (isNewListingFlow && tab !== AVAILABILITY) {
-          const listingId = r.data.data.id;
-          automaticRedirectsForNewListingFlow(tab, listingId);
+          const savedListing = r.data.data;
+          const listingId = savedListing.id;
+          automaticRedirectsForNewListingFlow(tab, listingId, savedListing);
         }
       })
       .catch(e => {
