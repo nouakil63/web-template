@@ -1,6 +1,55 @@
-import { sanitizeUrl } from './sanitize';
+import { sanitizeListing, sanitizeUrl } from './sanitize';
 
 describe('sanitize utils', () => {
+  describe('sanitizeListing', () => {
+    it('keeps floorsNumber text even if hosted config still marks it as long', () => {
+      const listing = {
+        type: 'listing',
+        id: { uuid: 'listing-id' },
+        attributes: {
+          title: 'Listing title',
+          description: 'Listing description',
+          publicData: {
+            floorsNumber: 'RDC+22',
+            areaSize: 'not-a-number',
+          },
+        },
+      };
+      const config = {
+        listingFields: [
+          { key: 'floorsNumber', schemaType: 'long' },
+          { key: 'areaSize', schemaType: 'long' },
+        ],
+      };
+
+      const sanitized = sanitizeListing(listing, config);
+
+      expect(sanitized.attributes.publicData.floorsNumber).toBe('RDC+22');
+      expect(sanitized.attributes.publicData.areaSize).toBeNull();
+    });
+
+    it('sanitizes floorsNumber compatibility text', () => {
+      const listing = {
+        type: 'listing',
+        id: { uuid: 'listing-id' },
+        attributes: {
+          title: 'Listing title',
+          description: 'Listing description',
+          publicData: {
+            floorsNumber: '<RDC+22>',
+          },
+        },
+      };
+      const config = {
+        listingFields: [{ key: 'floorsNumber', schemaType: 'long' }],
+      };
+
+      const sanitized = sanitizeListing(listing, config);
+
+      expect(sanitized.attributes.publicData.floorsNumber).toBe('＜RDC+22＞');
+    });
+  });
+
   // Originates to https://github.com/braintree/sanitize-url/
   describe('sanitizeUrl', () => {
     it('does not alter http URLs with alphanumeric characters', () => {
@@ -62,6 +111,124 @@ describe('sanitize utils', () => {
 
     it('strips out ctrl chars', () => {
       expect(sanitizeUrl('www.example.com/\u200D\u0000\u001F\x00\x1F\uFEFFfoo')).toBe(
+        'www.example.com/foo'
+      );
+    });
+
+    it('replaces blank urls with about:blank', () => {
+      expect(sanitizeUrl('')).toBe('about:blank');
+    });
+
+    it('replaces null values with about:blank', () => {
+      expect(sanitizeUrl(null)).toBe('about:blank');
+    });
+
+    it('replaces undefined values with about:blank', () => {
+      expect(sanitizeUrl()).toBe('about:blank');
+    });
+
+    it('removes whitespace from urls', () => {
+      expect(sanitizeUrl('   http://example.com/path/to:something    ')).toBe(
+        'http://example.com/path/to:something'
+      );
+    });
+
+    it('decodes html entities', () => {
+      // all these decode to javascript:alert('xss');
+      const attackVectors = [
+        '&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041',
+        '&#106;&#97;&#118;&#97;&#115;&#99;&#114;&#105;&#112;&#116;&#58;&#97;&#108;&#101;&#114;&#116;&#40;&#39;&#88;&#83;&#83;&#39;&#41;',
+        '&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29',
+        "jav&#x09;ascript:alert('XSS');",
+        " &#14; javascript:alert('XSS');",
+      ];
+
+      attackVectors.forEach(vector => {
+        expect(sanitizeUrl(vector)).toBe('about:blank');
+      });
+
+      // https://example.com/javascript:alert('XSS')
+      // since the javascript is the url path, and not the protocol,
+      // this url is technically sanitized
+      expect(
+        sanitizeUrl(
+          '&#104;&#116;&#116;&#112;&#115;&#0000058//&#101;&#120;&#97;&#109;&#112;&#108;&#101;&#46;&#99;&#111;&#109;/&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041'
+        )
+      ).toBe("https://example.com/javascript:alert('XSS')");
+    });
+
+    describe('invalid protocols', () => {
+      describe.each(['javascript', 'data', 'vbscript'])('%s', protocol => {
+        it(`replaces ${protocol} urls with about:blank`, () => {
+          expect(sanitizeUrl(`${protocol}:alert(document.domain)`)).toBe('about:blank');
+        });
+
+        it(`allows ${protocol} urls that start with a letter prefix`, () => {
+          expect(sanitizeUrl(`not_${protocol}:alert(document.domain)`)).toBe(
+            `not_${protocol}:alert(document.domain)`
+          );
+        });
+
+        it(`disallows ${protocol} urls that start with non-\w characters as a suffix for the protocol`, () => {
+          expect(sanitizeUrl(`&!*${protocol}:alert(document.domain)`)).toBe('about:blank');
+        });
+
+        it(`disregards capitalization for ${protocol} urls`, () => {
+          // upper case every other letter in protocol name
+          const mixedCapitalizationProtocol = protocol
+            .split('')
+            .map((character, index) => {
+              if (index % 2 === 0) {
+                return character.toUpperCase();
+              }
+              return character;
+            })
+            .join('');
+
+          expect(sanitizeUrl(`${mixedCapitalizationProtocol}:alert(document.domain)`)).toBe(
+            'about:blank'
+          );
+        });
+
+        it(`ignores invisible ctrl characters in ${protocol} urls`, () => {
+          const protocolWithControlCharacters = protocol
+            .split('')
+            .map((character, index) => {
+              if (index === 1) {
+                return character + '%EF%BB%BF%EF%BB%BF';
+              } else if (index === 2) {
+                return character + '%e2%80%8b';
+              }
+              return character;
+            })
+            .join('');
+
+          expect(
+            sanitizeUrl(
+              decodeURIComponent(`${protocolWithControlCharacters}:alert(document.domain)`)
+            )
+          ).toBe('about:blank');
+        });
+
+        it(`replaces ${protocol} urls with about:blank when url begins with %20`, () => {
+          expect(
+            sanitizeUrl(decodeURIComponent(`%20%20%20%20${protocol}:alert(document.domain)`))
+          ).toBe('about:blank');
+        });
+
+        it(`replaces ${protocol} urls with about:blank when ${protocol} url begins with spaces`, () => {
+          expect(sanitizeUrl(`    ${protocol}:alert(document.domain)`)).toBe('about:blank');
+        });
+
+        it(`does not replace ${protocol}: if it is not in the scheme of the URL`, () => {
+          expect(sanitizeUrl(`http://example.com#${protocol}:foo`)).toBe(
+            `http://example.com#${protocol}:foo`
+          );
+        });
+      });
+    });
+  });
+});
         'www.example.com/foo'
       );
     });
