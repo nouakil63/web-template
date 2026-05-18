@@ -548,7 +548,7 @@ class EditListingWizard extends Component {
 
     // If selectedTab is not active for listing with valid listing type,
     // redirect to the beginning of wizard
-    if (!invalidExistingListingType && !tabsStatus[selectedTab]) {
+    if (!invalidExistingListingType && !tabsStatus[selectedTab] && !fetchInProgress) {
       const currentTabIndex = tabs.indexOf(selectedTab);
       const nearestActiveTab = tabs
         .slice(0, currentTabIndex)
