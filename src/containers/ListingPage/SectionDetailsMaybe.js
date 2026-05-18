@@ -7,6 +7,12 @@ import { Heading } from '../../components';
 
 import css from './ListingPage.module.css';
 
+const fallbackPublicDataKeys = {
+  floorsNumber: 'floorsNumberCustom',
+};
+
+const hasValue = value => value != null && value !== '';
+
 const SectionDetailsMaybe = props => {
   const { publicData, metadata = {}, listingFieldConfigs, isFieldForCategory, intl } = props;
 
@@ -21,11 +27,16 @@ const SectionDetailsMaybe = props => {
     const isTargetCategory = isFieldForCategory(config);
 
     const { isDetail, label } = showConfig;
-    const publicDataValue = publicData[key];
+    const fallbackKey = fallbackPublicDataKeys[key];
+    const publicDataValue = hasValue(publicData[key])
+      ? publicData[key]
+      : fallbackKey
+      ? publicData[fallbackKey]
+      : publicData[key];
     const metadataValue = metadata[key];
-    const value = typeof publicDataValue !== 'undefined' ? publicDataValue : metadataValue;
+    const value = hasValue(publicDataValue) ? publicDataValue : metadataValue;
 
-    if (isDetail && isTargetListingType && isTargetCategory && typeof value !== 'undefined') {
+    if (isDetail && isTargetListingType && isTargetCategory && hasValue(value)) {
       const findSelectedOption = enumValue => enumOptions?.find(o => enumValue === `${o.option}`);
       const getBooleanMessage = value =>
         value
