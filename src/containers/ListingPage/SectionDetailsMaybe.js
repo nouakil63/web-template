@@ -34,10 +34,12 @@ const SectionDetailsMaybe = props => {
       const optionConfig = findSelectedOption(value);
 
       return schemaType === 'enum'
-        ? filteredConfigs.concat({ key, value: optionConfig?.label, label })
+        ? filteredConfigs.concat({ key, value: optionConfig?.label || value, label })
         : schemaType === 'boolean'
         ? filteredConfigs.concat({ key, value: getBooleanMessage(value), label })
         : schemaType === 'long'
+        ? filteredConfigs.concat({ key, value, label })
+        : schemaType === 'text'
         ? filteredConfigs.concat({ key, value, label })
         : filteredConfigs;
     }
